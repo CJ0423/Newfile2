@@ -11,7 +11,6 @@ def findBook(input_type):
     list_book = {
         'book': 'https://www.books.com.tw/web/sys_tdrntb/books/'
     }
-
     getdata = requests.get(
         list_book[input_type],
         headers=headers
@@ -29,7 +28,8 @@ def findBook(input_type):
         datalist.append(a.text)
 
     title = [
-        '書名'
+        '書名',
+        '作者',
     ]
 
     df = pd.DataFrame(datalist[0:], columns=title)
