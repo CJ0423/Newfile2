@@ -20,20 +20,35 @@ def findBook(input_type):
         getdata.content,
         'html.parser',
         from_encoding='utf-8'
-    ).find('h4')
+    ).find('div', class_='mod type02_m035 clearfix')
 
     datalist = []
+    author = []
 
-    for a in soup.find_all_next('a'):
-        datalist.append(a.text)
+    for h4 in soup.find_all_next('h4'):
+        datalist.extend(
+            [row.text for row in h4.find_all('a')]
+        )
+    #
+    # for ul in soup.find_all_next('ul', class_="msg"):
+    #      author.extend(
+    #          [row.text for row in ul.find_all('a')]
+    #         )
+
+    for ul in soup.find_all_next('ul', class_="msg"):
+        author_row = [row.text for row in ul.find_all('a')]
+        if len(author_row) == 0:
+            author.append('')
+        else:
+            author.extend(author_row)
 
     title = [
-        '書名',
-        '作者',
-    ]
-
-    df = pd.DataFrame(datalist[0:], columns=title)
+        '書名']
+    df = pd.DataFrame(datalist, columns=title)
+    df['書名'] = pd.DataFrame(datalist)
+    df['作者'] = pd.DataFrame(author)
     print(df)
+
 
     df.to_csv('{}_list.csv'.format(input_type), index=False)
 

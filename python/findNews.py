@@ -1,15 +1,42 @@
 import requests
 from bs4 import BeautifulSoup
-res = requests.get('https://news.cnyes.com/news/cat/headline?exp=a').content
-soup = BeautifulSoup(res, 'html.parser')
-go = soup.find("div", {"class": "_2bFl theme-list"})
-basic = 'https://news.cnyes.com'
-news = []
+import pandas as pd
 
-for i in range(5):
-    news.append([
-        go.find_all('a')[i].text,
-        basic+go.find_all('a')[i]['href']
-    ])
-for n in news:
-    print(n)
+headers = {
+    'content-type': 'text/html; charset=UTF-8',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36'
+}
+
+def findBook(input_type):
+    list_book = {
+        'book': 'https://www.books.com.tw/web/sys_tdrntb/books/'
+    }
+    getdata = requests.get(
+        list_book[input_type],
+        headers=headers
+    )
+    # print(getdata.encoding) utf-8
+    soup = BeautifulSoup(
+        getdata.content,
+        'html.parser',
+        from_encoding='utf-8'
+    )
+
+    datalist = []
+
+    for a in soup.find_all('a', {'class': 'text_brown'}):
+        book_name = a.find('img')['alt']
+        author = a.text.strip().replace(book_name, '').strip()
+        datalist.append([book_name, author])
+
+    title = [
+        '書名',
+        '作者',
+    ]
+
+    df = pd.DataFrame(datalist[0:], columns=title)
+    print(df)
+
+    df.to_csv('{}_list.csv'.format(input_type), index=False)
+
+findBook('book')
