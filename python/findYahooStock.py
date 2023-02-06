@@ -31,7 +31,8 @@ def findBook(input_type):
     title = [
         '書名'
     ]
-    df = pd.DataFrame(datalist[1:], columns=title)
+
+    df = pd.DataFrame(datalist[0:], columns=title)
     print(df)
 
     df.to_csv('{}_list.csv'.format(input_type), index=False)
