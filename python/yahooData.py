@@ -31,7 +31,7 @@ def list_stock(input_type):
         )
     title = ["股票名稱"]
 
-    df = pd.DataFrame(datalist[1:], columns=title)
+    df = pd.DataFrame(datalist[0:], columns=title)
     print(df)
     df.to_csv('{}_list.csv'.format(input_type), index=False)
 
