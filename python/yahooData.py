@@ -27,7 +27,7 @@ def list_stock(input_type):
     datalist = []
     for col in soup.find_all_next('li'):
         data = [row.text for row in col.find_all('div', class_='Lh(20px) Fw(600) Fz(16px) Ell')]
-    if len(data) > 0:
+        # if len(data) > 0:
         datalist.append(data)
 
 
